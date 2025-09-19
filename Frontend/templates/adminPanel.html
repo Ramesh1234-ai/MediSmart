@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donation Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #e74c3c;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: inline-block;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 10px 20px;
+            border-radius: 25px;
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .auth-section, .register-section {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            background: #ecf0f1;
+            color: #7f8c8d;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .auth-section h2 {
+            color: #e74c3c;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+            background: white;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        .dashboard-nav {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .nav-item {
+            padding: 12px 25px;
+            background: #ecf0f1;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        .nav-item.active {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-card .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #e74c3c;
+        }
+
+        .stat-card p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .content-section {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .content-section h3 {
+            color: #e74c3c;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .data-table {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr:hover {
+            background-color: rgba(231, 76, 60, 0.05);
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 25px;
+            font-size: 16px;
+            background: #fafafa;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .filter-select {
+            padding: 15px 20px;
+            border: 2px solid #ecf0f1;
+            border-radius: 25px;
+            font-size: 16px;
+            background: #fafafa;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            font-weight: 600;
+            border: 1px solid transparent;
+        }
+
+        .alert-success {
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border-color: rgba(39, 174, 96, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border-color: rgba(231, 76, 60, 0.3);
+        }
+
+        .alert-warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            border-color: rgba(243, 156, 18, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #e74c3c;
+        }
+
+        .blood-group-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #f39c12;
+            color: white;
+        }
+
+        .status-matched {
+            background: #3498db;
+            color: white;
+        }
+
+        .status-fulfilled {
+            background: #27ae60;
+            color: white;
+        }
+
+        .urgency-high {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .urgency-medium {
+            background: #f39c12;
+            color: white;
+        }
+
+        .urgency-low {
+            background: #27ae60;
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-nav {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .nav-item {
+                text-align: center;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+            
+            .search-input {
+                min-width: auto;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🩸 Blood Donation Management System</h1>
+            <p class="subtitle">Connecting Lives Through Safe Blood Donation</p>
+            <div id="user-info" class="user-info hidden"></div>
+        </div>
+
+        <!-- Authentication Section -->
+        <div id="auth-section" class="auth-section">
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="switchAuthTab('login')">Login</div>
+                <div class="auth-tab" onclick="switchAuthTab('register')">Register</div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-form" class="auth-form">
+                <h2>🔐 Login to Your Account</h2>
+                <div class="form-group">
+                    <label for="login-username">Username:</label>
+                    <input type="text" id="login-username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                </div>
+                <button class="btn" onclick="login()">🚀 Login</button>
+                <div id="login-message"></div>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-form" class="auth-form hidden">
+                <h2>📝 Create New Account</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-username">Username:</label>
+                        <input type="text" id="reg-username" placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-email">Email:</label>
+                        <input type="email" id="reg-email" placeholder="Enter your email">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reg-password">Password:</label>
+                        <input type="password" id="reg-password" placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg-role">Role:</label>
+                        <select id="reg-role">
+                            <option value="donor">Donor</option>
+                            <option value="recipient">Recipient</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="register()">✨ Create Account</button>
+                <div id="register-message"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div id="main-content" class="main-content">
+            <!-- Dashboard Navigation -->
+            <div class="dashboard-nav">
+                <div class="nav-item active" onclick="showSection('dashboard')">📊 Dashboard</div>
+                <div class="nav-item" onclick="showSection('donors')">🩸 Donors</div>
+                <div class="nav-item" onclick="showSection('recipients')">🏥 Recipients</div>
+                <div class="nav-item" onclick="showSection('requests')">📋 Requests</div>
+                <div class="nav-item" onclick="showSection('profile')">👤 Profile</div>
+                <div style="margin-left: auto;">
+                    <button class="btn btn-secondary" onclick="exportData()">📥 Export Data</button>
+                    <button class="btn btn-danger" onclick="logout()">🚪 Logout</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboard-section" class="content-section">
+                <h3>📊 Dashboard Overview</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="icon">🩸</div>
+                        <h3 id="total-donors">0</h3>
+                        <p>Total Donors</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">✅</div>
+                        <h3 id="active-donors">0</h3>
+                        <p>Eligible Donors</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">🏥</div>
+                        <h3 id="total-recipients">0</h3>
+                        <p>Total Recipients</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">⏳</div>
+                        <h3 id="pending-requests">0</h3>
+                        <p>Pending Requests</p>
+                    </div>
+                    <div class="stat-card">
+                        <div class="icon">✅</div>
+                        <h3 id="fulfilled-requests">0</h3>
+                        <p>Fulfilled Requests</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donors Section -->
+            <div id="donors-section" class="content-section hidden">
+                <h3>🩸 Donor Management</h3>
+                
+                <div class="search-filter">
+                    <input type="text" id="donor-search" class="search-input" placeholder="🔍 Search donors...">
+                    <select id="blood-group-filter" class="filter-select">
+                        <option value="">All Blood Groups</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                    <button class="btn btn-success" onclick="showDonorForm()">➕ Add Donor</button>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Blood Group</th>
+                                <th>Phone</th>
+                                <th>City</th>
+                                <th>Age</th>
+                                <th>Last Donation</th>
+                                <th>Eligible</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="donors-table-body">
+                            <tr>
+                                <td colspan="8" class="loading">Loading donors...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recipients Section -->
+            <div id="recipients-section" class="content-section hidden">
+                <h3>🏥 Recipient Management</h3>
+                
+                <div class="search-filter">
+                    <input type="text" id="recipient-search" class="search-input" placeholder="🔍 Search recipients...">
+                    <select id="urgency-filter" class="filter-select">
+                        <option value="">All Urgency Levels</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                    <button class="btn btn-success" onclick="showRecipientForm()">➕ Add Recipient</button>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Blood Group</th>
+                                <th>Phone</th>
+                                <th>Hospital</th>
+                                <th>Required Units</th>
+                                <th>Urgency</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recipients-table-body">
+                            <tr>
+                                <td colspan="7" class="loading">Loading recipients...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Requests Section -->
+            <div id="requests-section" class="content-section hidden">
+                <h3>📋 Request Management</h3>
+                
+                <div class="search-filter">
+                    <input type="text" id="request-search" class="search-input" placeholder="🔍 Search requests...">
+                    <select id="status-filter" class="filter-select">
+                        <option value="">All Statuses</option>
+                        <option value="pending">Pending</option>
+                        <option value="matched">Matched</option>
+                        <option value="fulfilled">Fulfilled</option>
+                    </select>
+                </div>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Recipient</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Urgency</th>
+                                <th>Hospital</th>
+                                <th>Status</th>
+                                <th>Donor</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requests-table-body">
+                            <tr>
+                                <td colspan="8" class="loading">Loading requests...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Profile Section -->
+            <div id="profile-section" class="content-section hidden">
+                <h3>👤 My Profile</h3>
+                <div id="profile-content">
+                    <p class="loading">Loading profile...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Donor Form Modal -->
+        <div id="donor-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeDonorModal()">&times;</span>
+                <h3 id="donor-modal-title">Add New Donor</h3>
+                <form id="donor-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="donor-name">Full Name:</label>
+                            <input type="text" id="donor-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-phone">Phone:</label>
+                            <input type="tel" id="donor-phone" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="donor-blood-group">Blood Group:</label>
+                            <select id="donor-blood-group" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-age">Age:</label>
+                            <input type="number" id="donor-age" min="18" max="65" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="donor-gender">Gender:</label>
+                            <select id="donor-gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-last-donation">Last Donation Date:</label>
+                            <input type="date" id="donor-last-donation">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="donor-city">City:</label>
+                            <input type="text" id="donor-city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="donor-state">State:</label>
+                            <input type="text" id="donor-state" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="donor-address">Full Address:</label>
+                        <textarea id="donor-address" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">💾 Save Donor</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeDonorModal()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Recipient Form Modal -->
+        <div id="recipient-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeRecipientModal()">&times;</span>
+                <h3 id="recipient-modal-title">Add New Recipient</h3>
+                <form id="recipient-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipient-name">Full Name:</label>
+                            <input type="text" id="recipient-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-phone">Phone:</label>
+                            <input type="tel" id="recipient-phone" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipient-blood-group">Blood Group:</label>
+                            <select id="recipient-blood-group" required>
+                                <option value="">Select Blood Group</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-units">Required Units:</label>
+                            <input type="number" id="recipient-units" min="1" max="10" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipient-urgency">Urgency Level:</label>
+                            <select id="recipient-urgency" required>
+                                <option value="">Select Urgency</option>
+                                <option value="high">High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-hospital">Hospital Name:</label>
+                            <input type="text" id="recipient-hospital" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipient-city">City:</label>
+                            <input type="text" id="recipient-city" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-state">State:</label>
+                            <input type="text" id="recipient-state" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-hospital-address">Hospital Address:</label>
+                        <textarea id="recipient-hospital-address" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-medical-condition">Medical Condition:</label>
+                        <textarea id="recipient-medical-condition" rows="3" placeholder="Optional: Describe the medical condition requiring blood transfusion"></textarea>
+                    </div>
+                    <button type="submit" class="btn">💾 Save Recipient</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeRecipientModal()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Match Donors Modal -->
+        <div id="match-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeMatchModal()">&times;</span>
+                <h3>🔍 Compatible Donors</h3>
+                <div id="compatible-donors-list">
+                    <p class="loading">Finding compatible donors...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+     // Global variables
+let currentUser = null;
+let authToken = null;
+let currentSection = 'dashboard';
+let editingDonorId = null;
+let editingRecipientId = null;
+let currentRequestId = null;
+
+// Mock data storage (in a real app, this would be a backend database)
+let users = [
+    { username: 'admin', password: 'admin123', role: 'admin', email: 'admin@bloodbank.com' },
+    { username: 'donor1', password: 'donor123', role: 'donor', email: 'donor1@email.com' },
+    { username: 'recipient1', password: 'recipient123', role: 'recipient', email: 'recipient1@email.com' }
+];
+
+let donors = [
+    {
+        id: 1,
+        name: 'John Doe',
+        phone: '+1234567890',
+        bloodGroup: 'O+',
+        age: 28,
+        gender: 'male',
+        lastDonation: '2024-06-15',
+        city: 'New York',
+        state: 'NY',
+        address: '123 Main St, New York, NY',
+        eligible: true
+    },
+    {
+        id: 2,
+        name: 'Jane Smith',
+        phone: '+1234567891',
+        bloodGroup: 'A+',
+        age: 32,
+        gender: 'female',
+        lastDonation: '2024-07-20',
+        city: 'Los Angeles',
+        state: 'CA',
+        address: '456 Oak Ave, Los Angeles, CA',
+        eligible: true
+    },
+    {
+        id: 3,
+        name: 'Mike Johnson',
+        phone: '+1234567892',
+        bloodGroup: 'B+',
+        age: 25,
+        gender: 'male',
+        lastDonation: '2024-12-01',
+        city: 'Chicago',
+        state: 'IL',
+        address: '789 Pine St, Chicago, IL',
+        eligible: false
+    }
+];
+
+let recipients = [
+    {
+        id: 1,
+        name: 'Alice Brown',
+        phone: '+1234567893',
+        bloodGroup: 'O+',
+        requiredUnits: 2,
+        urgency: 'high',
+        hospital: 'City General Hospital',
+        city: 'New York',
+        state: 'NY',
+        hospitalAddress: '100 Hospital St, New York, NY',
+        medicalCondition: 'Emergency surgery required'
+    },
+    {
+        id: 2,
+        name: 'Bob Wilson',
+        phone: '+1234567894',
+        bloodGroup: 'A+',
+        requiredUnits: 3,
+        urgency: 'medium',
+        hospital: 'Central Medical Center',
+        city: 'Los Angeles',
+        state: 'CA',
+        hospitalAddress: '200 Medical Blvd, Los Angeles, CA',
+        medicalCondition: 'Scheduled surgery'
+    }
+];
+
+let bloodRequests = [
+    {
+        id: 1,
+        recipientId: 1,
+        donorId: null,
+        status: 'pending',
+        createdAt: '2024-12-20',
+        matchedAt: null,
+        fulfilledAt: null
+    },
+    {
+        id: 2,
+        recipientId: 2,
+        donorId: 1,
+        status: 'matched',
+        createdAt: '2024-12-19',
+        matchedAt: '2024-12-20',
+        fulfilledAt: null
+    }
+];
+
+// API Base URL (mock - in real app would be actual backend)
+const API_BASE = 'http://localhost:5000/api';
+
+// Initialize application
+document.addEventListener('DOMContentLoaded', function() {
+    setupEventListeners();
+    checkAuthToken();
+});
+
+// Setup event listeners
+function setupEventListeners() {
+    // Auth form submissions
+    const loginPassword = document.getElementById('login-password');
+    if (loginPassword) {
+        loginPassword.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+    }
+
+    // Form submissions
+    const donorForm = document.getElementById('donor-form');
+    const recipientForm = document.getElementById('recipient-form');
+    
+    if (donorForm) {
+        donorForm.addEventListener('submit', handleDonorFormSubmit);
+    }
+    
+    if (recipientForm) {
+        recipientForm.addEventListener('submit', handleRecipientFormSubmit);
+    }
+
+    // Search and filter inputs
+    const donorSearch = document.getElementById('donor-search');
+    const bloodGroupFilter = document.getElementById('blood-group-filter');
+    const recipientSearch = document.getElementById('recipient-search');
+    const urgencyFilter = document.getElementById('urgency-filter');
+    const requestSearch = document.getElementById('request-search');
+    const statusFilter = document.getElementById('status-filter');
+
+    if (donorSearch) donorSearch.addEventListener('input', filterDonors);
+    if (bloodGroupFilter) bloodGroupFilter.addEventListener('change', filterDonors);
+    if (recipientSearch) recipientSearch.addEventListener('input', filterRecipients);
+    if (urgencyFilter) urgencyFilter.addEventListener('change', filterRecipients);
+    if (requestSearch) requestSearch.addEventListener('input', filterRequests);
+    if (statusFilter) statusFilter.addEventListener('change', filterRequests);
+}
+
+// Authentication functions
+function switchAuthTab(tab) {
+    const loginTab = document.querySelector('.auth-tab:first-child');
+    const registerTab = document.querySelector('.auth-tab:last-child');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+
+    if (tab === 'login') {
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        registerForm.classList.add('hidden');
+    } else {
+        loginTab.classList.remove('active');
+        registerTab.classList.add('active');
+        loginForm.classList.add('hidden');
+        registerForm.classList.remove('hidden');
+    }
+}
+
+function checkAuthToken() {
+    const token = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('currentUser');
+    
+    if (token && userData) {
+        authToken = token;
+        currentUser = JSON.parse(userData);
+        showMainContent();
+    }
+}
+
+function login() {
+    const username = document.getElementById('login-username').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+    const messageDiv = document.getElementById('login-message');
+
+    if (!username || !password) {
+        showMessage(messageDiv, 'Please enter both username and password', 'error');
+        return;
+    }
+
+    // Mock authentication
+    const user = users.find(u => u.username === username && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        authToken = generateToken();
+        
+        // Store in localStorage
+        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        showMessage(messageDiv, 'Login successful! Redirecting...', 'success');
+        
+        setTimeout(() => {
+            showMainContent();
+        }, 1000);
+    } else {
+        showMessage(messageDiv, 'Invalid username or password', 'error');
+    }
+}
+
+function register() {
+    const username = document.getElementById('reg-username').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const password = document.getElementById('reg-password').value.trim();
+    const role = document.getElementById('reg-role').value;
+    const messageDiv = document.getElementById('register-message');
+
+    if (!username || !email || !password || !role) {
+        showMessage(messageDiv, 'Please fill in all fields', 'error');
+        return;
+    }
+
+    // Check if username already exists
+    if (users.find(u => u.username === username)) {
+        showMessage(messageDiv, 'Username already exists', 'error');
+        return;
+    }
+
+    // Check if email already exists
+    if (users.find(u => u.email === email)) {
+        showMessage(messageDiv, 'Email already registered', 'error');
+        return;
+    }
+
+    // Create new user
+    const newUser = {
+        username,
+        email,
+        password,
+        role
+    };
+
+    users.push(newUser);
+    showMessage(messageDiv, 'Registration successful! Please login.', 'success');
+    
+    // Clear form
+    document.getElementById('reg-username').value = '';
+    document.getElementById('reg-email').value = '';
+    document.getElementById('reg-password').value = '';
+    document.getElementById('reg-role').value = '';
+    
+    // Switch to login tab
+    setTimeout(() => {
+        switchAuthTab('login');
+    }, 1500);
+}
+
+function logout() {
+    currentUser = null;
+    authToken = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    
+    // Hide main content and show auth section
+    document.getElementById('main-content').classList.remove('active');
+    document.getElementById('auth-section').classList.remove('hidden');
+    document.getElementById('user-info').classList.add('hidden');
+    
+    // Clear forms
+    document.getElementById('login-username').value = '';
+    document.getElementById('login-password').value = '';
+}
+
+function showMainContent() {
+    document.getElementById('auth-section').classList.add('hidden');
+    document.getElementById('main-content').classList.add('active');
+    
+    // Show user info
+    const userInfo = document.getElementById('user-info');
+    userInfo.textContent = `Welcome, ${currentUser.username} (${currentUser.role})`;
+    userInfo.classList.remove('hidden');
+    
+    // Load dashboard data
+    loadDashboardData();
+    showSection('dashboard');
+}
+
+// Navigation functions
+function showSection(section) {
+    // Hide all sections
+    document.querySelectorAll('.content-section').forEach(el => {
+        el.classList.add('hidden');
+    });
+    
+    // Remove active class from all nav items
+    document.querySelectorAll('.nav-item').forEach(el => {
+        el.classList.remove('active');
+    });
+    
+    // Show selected section
+    document.getElementById(`${section}-section`).classList.remove('hidden');
+    
+    // Add active class to selected nav item
+    event.target.classList.add('active');
+    
+    currentSection = section;
+    
+    // Load section-specific data
+    switch (section) {
+        case 'dashboard':
+            loadDashboardData();
+            break;
+        case 'donors':
+            loadDonors();
+            break;
+        case 'recipients':
+            loadRecipients();
+            break;
+        case 'requests':
+            loadRequests();
+            break;
+        case 'profile':
+            loadProfile();
+            break;
+    }
+}
+
+// Dashboard functions
+function loadDashboardData() {
+    const eligibleDonors = donors.filter(d => d.eligible);
+    const pendingRequests = bloodRequests.filter(r => r.status === 'pending');
+    const fulfilledRequests = bloodRequests.filter(r => r.status === 'fulfilled');
+    
+    document.getElementById('total-donors').textContent = donors.length;
+    document.getElementById('active-donors').textContent = eligibleDonors.length;
+    document.getElementById('total-recipients').textContent = recipients.length;
+    document.getElementById('pending-requests').textContent = pendingRequests.length;
+    document.getElementById('fulfilled-requests').textContent = fulfilledRequests.length;
+}
+
+// Donor management functions
+function loadDonors() {
+    const tbody = document.getElementById('donors-table-body');
+    tbody.innerHTML = '';
+    
+    donors.forEach(donor => {
+        const row = createDonorRow(donor);
+        tbody.appendChild(row);
+    });
+}
+
+function createDonorRow(donor) {
+    const row = document.createElement('tr');
+    const eligibleText = donor.eligible ? '✅ Yes' : '❌ No';
+    const eligibleClass = donor.eligible ? 'status-fulfilled' : 'status-pending';
+    
+    row.innerHTML = `
+        <td>${donor.name}</td>
+        <td><span class="blood-group-badge">${donor.bloodGroup}</span></td>
+        <td>${donor.phone}</td>
+        <td>${donor.city}</td>
+        <td>${donor.age}</td>
+        <td>${donor.lastDonation || 'Never'}</td>
+        <td><span class="status-badge ${eligibleClass}">${eligibleText}</span></td>
+        <td>
+            <button class="btn btn-sm btn-secondary" onclick="editDonor(${donor.id})">✏️ Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteDonor(${donor.id})">🗑️ Delete</button>
+        </td>
+    `;
+    
+    return row;
+}
+
+function showDonorForm() {
+    editingDonorId = null;
+    document.getElementById('donor-modal-title').textContent = 'Add New Donor';
+    document.getElementById('donor-form').reset();
+    document.getElementById('donor-modal').style.display = 'block';
+}
+
+function editDonor(id) {
+    const donor = donors.find(d => d.id === id);
+    if (!donor) return;
+    
+    editingDonorId = id;
+    document.getElementById('donor-modal-title').textContent = 'Edit Donor';
+    
+    // Fill form with donor data
+    document.getElementById('donor-name').value = donor.name;
+    document.getElementById('donor-phone').value = donor.phone;
+    document.getElementById('donor-blood-group').value = donor.bloodGroup;
+    document.getElementById('donor-age').value = donor.age;
+    document.getElementById('donor-gender').value = donor.gender;
+    document.getElementById('donor-last-donation').value = donor.lastDonation || '';
+    document.getElementById('donor-city').value = donor.city;
+    document.getElementById('donor-state').value = donor.state;
+    document.getElementById('donor-address').value = donor.address;
+    
+    document.getElementById('donor-modal').style.display = 'block';
+}
+
+function handleDonorFormSubmit(e) {
+    e.preventDefault();
+    
+    const donorData = {
+        name: document.getElementById('donor-name').value,
+        phone: document.getElementById('donor-phone').value,
+        bloodGroup: document.getElementById('donor-blood-group').value,
+        age: parseInt(document.getElementById('donor-age').value),
+        gender: document.getElementById('donor-gender').value,
+        lastDonation: document.getElementById('donor-last-donation').value || null,
+        city: document.getElementById('donor-city').value,
+        state: document.getElementById('donor-state').value,
+        address: document.getElementById('donor-address').value
+    };
+    
+    // Check eligibility based on last donation
+    donorData.eligible = checkDonorEligibility(donorData.lastDonation);
+    
+    if (editingDonorId) {
+        // Update existing donor
+        const index = donors.findIndex(d => d.id === editingDonorId);
+        donors[index] = { ...donors[index], ...donorData };
+        showAlert('Donor updated successfully!', 'success');
+    } else {
+        // Add new donor
+        donorData.id = Date.now(); // Simple ID generation
+        donors.push(donorData);
+        showAlert('Donor added successfully!', 'success');
+    }
+    
+    closeDonorModal();
+    loadDonors();
+    loadDashboardData();
+}
+
+function deleteDonor(id) {
+    if (confirm('Are you sure you want to delete this donor?')) {
+        donors = donors.filter(d => d.id !== id);
+        loadDonors();
+        loadDashboardData();
+        showAlert('Donor deleted successfully!', 'success');
+    }
+}
+
+function closeDonorModal() {
+    document.getElementById('donor-modal').style.display = 'none';
+    editingDonorId = null;
+}
+
+function checkDonorEligibility(lastDonation) {
+    if (!lastDonation) return true;
+    
+    const lastDonationDate = new Date(lastDonation);
+    const today = new Date();
+    const daysDiff = Math.floor((today - lastDonationDate) / (1000 * 60 * 60 * 24));
+    
+    return daysDiff >= 56; // 8 weeks minimum gap
+}
+
+// Recipient management functions
+function loadRecipients() {
+    const tbody = document.getElementById('recipients-table-body');
+    tbody.innerHTML = '';
+    
+    recipients.forEach(recipient => {
+        const row = createRecipientRow(recipient);
+        tbody.appendChild(row);
+    });
+}
+
+function createRecipientRow(recipient) {
+    const row = document.createElement('tr');
+    const urgencyClass = `urgency-${recipient.urgency}`;
+    
+    row.innerHTML = `
+        <td>${recipient.name}</td>
+        <td><span class="blood-group-badge">${recipient.bloodGroup}</span></td>
+        <td>${recipient.phone}</td>
+        <td>${recipient.hospital}</td>
+        <td>${recipient.requiredUnits}</td>
+        <td><span class="status-badge ${urgencyClass}">${recipient.urgency.toUpperCase()}</span></td>
+        <td>
+            <button class="btn btn-sm btn-success" onclick="matchDonors(${recipient.id})">🔍 Match</button>
+            <button class="btn btn-sm btn-secondary" onclick="editRecipient(${recipient.id})">✏️ Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteRecipient(${recipient.id})">🗑️ Delete</button>
+        </td>
+    `;
+    
+    return row;
+}
+
+function showRecipientForm() {
+    editingRecipientId = null;
+    document.getElementById('recipient-modal-title').textContent = 'Add New Recipient';
+    document.getElementById('recipient-form').reset();
+    document.getElementById('recipient-modal').style.display = 'block';
+}
+
+function editRecipient(id) {
+    const recipient = recipients.find(r => r.id === id);
+    if (!recipient) return;
+    
+    editingRecipientId = id;
+    document.getElementById('recipient-modal-title').textContent = 'Edit Recipient';
+    
+    // Fill form with recipient data
+    document.getElementById('recipient-name').value = recipient.name;
+    document.getElementById('recipient-phone').value = recipient.phone;
+    document.getElementById('recipient-blood-group').value = recipient.bloodGroup;
+    document.getElementById('recipient-units').value = recipient.requiredUnits;
+    document.getElementById('recipient-urgency').value = recipient.urgency;
+    document.getElementById('recipient-hospital').value = recipient.hospital;
+    document.getElementById('recipient-city').value = recipient.city;
+    document.getElementById('recipient-state').value = recipient.state;
+    document.getElementById('recipient-hospital-address').value = recipient.hospitalAddress;
+    document.getElementById('recipient-medical-condition').value = recipient.medicalCondition || '';
+    
+    document.getElementById('recipient-modal').style.display = 'block';
+}
+
+function handleRecipientFormSubmit(e) {
+    e.preventDefault();
+    
+    const recipientData = {
+        name: document.getElementById('recipient-name').value,
+        phone: document.getElementById('recipient-phone').value,
+        bloodGroup: document.getElementById('recipient-blood-group').value,
+        requiredUnits: parseInt(document.getElementById('recipient-units').value),
+        urgency: document.getElementById('recipient-urgency').value,
+        hospital: document.getElementById('recipient-hospital').value,
+        city: document.getElementById('recipient-city').value,
+        state: document.getElementById('recipient-state').value,
+        hospitalAddress: document.getElementById('recipient-hospital-address').value,
+        medicalCondition: document.getElementById('recipient-medical-condition').value || null
+    };
+    
+    if (editingRecipientId) {
+        // Update existing recipient
+        const index = recipients.findIndex(r => r.id === editingRecipientId);
+        recipients[index] = { ...recipients[index], ...recipientData };
+        showAlert('Recipient updated successfully!', 'success');
+    } else {
+        // Add new recipient
+        recipientData.id = Date.now(); // Simple ID generation
+        recipients.push(recipientData);
+        
+        // Create a new blood request
+        const newRequest = {
+            id: Date.now() + 1,
+            recipientId: recipientData.id,
+            donorId: null,
+            status: 'pending',
+            createdAt: new Date().toISOString().split('T')[0],
+            matchedAt: null,
+            fulfilledAt: null
+        };
+        bloodRequests.push(newRequest);
+        
+        showAlert('Recipient added successfully!', 'success');
+    }
+    
+    closeRecipientModal();
+    loadRecipients();
+    loadDashboardData();
+}
+
+function deleteRecipient(id) {
+    if (confirm('Are you sure you want to delete this recipient?')) {
+        recipients = recipients.filter(r => r.id !== id);
+        // Also remove related requests
+        bloodRequests = bloodRequests.filter(r => r.recipientId !== id);
+        loadRecipients();
+        loadDashboardData();
+        showAlert('Recipient deleted successfully!', 'success');
+    }
+}
+
+function closeRecipientModal() {
+    document.getElementById('recipient-modal').style.display = 'none';
+    editingRecipientId = null;
+}
+
+// Request management functions
+function loadRequests() {
+    const tbody = document.getElementById('requests-table-body');
+    tbody.innerHTML = '';
+    
+    bloodRequests.forEach(request => {
+        const row = createRequestRow(request);
+        tbody.appendChild(row);
+    });
+}
+
+function createRequestRow(request) {
+    const recipient = recipients.find(r => r.id === request.recipientId);
+    const donor = request.donorId ? donors.find(d => d.id === request.donorId) : null;
+    
+    if (!recipient) return document.createElement('tr'); // Skip if recipient not found
+    
+    const row = document.createElement('tr');
+    const statusClass = `status-${request.status}`;
+    const urgencyClass = `urgency-${recipient.urgency}`;
+    
+    row.innerHTML = `
+        <td>${recipient.name}</td>
+        <td><span class="blood-group-badge">${recipient.bloodGroup}</span></td>
+        <td>${recipient.requiredUnits}</td>
+        <td><span class="status-badge ${urgencyClass}">${recipient.urgency.toUpperCase()}</span></td>
+        <td>${recipient.hospital}</td>
+        <td><span class="status-badge ${statusClass}">${request.status.toUpperCase()}</span></td>
+        <td>${donor ? donor.name : 'Not matched'}</td>
+        <td>
+            ${request.status === 'pending' ? 
+                `<button class="btn btn-sm btn-success" onclick="matchDonors(${recipient.id})">🔍 Match</button>` :
+                request.status === 'matched' ? 
+                `<button class="btn btn-sm btn-warning" onclick="fulfillRequest(${request.id})">✅ Fulfill</button>` :
+                '<span class="status-badge status-fulfilled">Completed</span>'
+            }
+        </td>
+    `;
+    
+    return row;
+}
+
+// Donor matching functions
+function matchDonors(recipientId) {
+    const recipient = recipients.find(r => r.id === recipientId);
+    if (!recipient) return;
+    
+    currentRequestId = bloodRequests.find(r => r.recipientId === recipientId)?.id;
+    
+    // Find compatible donors
+    const compatibleDonors = findCompatibleDonors(recipient.bloodGroup);
+    const eligibleDonors = compatibleDonors.filter(d => d.eligible);
+    
+    // Show match modal
+    const modalContent = document.getElementById('compatible-donors-list');
+    
+    if (eligibleDonors.length === 0) {
+        modalContent.innerHTML = '<p class="alert alert-warning">No compatible eligible donors found.</p>';
+    } else {
+        modalContent.innerHTML = `
+            <p>Found ${eligibleDonors.length} compatible donor(s) for blood group ${recipient.bloodGroup}:</p>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Blood Group</th>
+                            <th>Phone</th>
+                            <th>City</th>
+                            <th>Last Donation</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${eligibleDonors.map(donor => `
+                            <tr>
+                                <td>${donor.name}</td>
+                                <td><span class="blood-group-badge">${donor.bloodGroup}</span></td>
+                                <td>${donor.phone}</td>
+                                <td>${donor.city}</td>
+                                <td>${donor.lastDonation || 'Never'}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-success" onclick="assignDonor(${donor.id})">
+                                        ✅ Assign
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
+    document.getElementById('match-modal').style.display = 'block';
+}
+
+function findCompatibleDonors(recipientBloodGroup) {
+    const compatibility = {
+        'A+': ['A+', 'A-', 'O+', 'O-'],
+        'A-': ['A-', 'O-'],
+        'B+': ['B+', 'B-', 'O+', 'O-'],
+        'B-': ['B-', 'O-'],
+        'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+        'AB-': ['A-', 'B-', 'AB-', 'O-'],
+        'O+': ['O+', 'O-'],
+        'O-': ['O-']
+    };
+    
+    const compatibleBloodGroups = compatibility[recipientBloodGroup] || [];
+    return donors.filter(donor => compatibleBloodGroups.includes(donor.bloodGroup));
+}
+
+function assignDonor(donorId) {
+    if (!currentRequestId) return;
+    
+    const request = bloodRequests.find(r => r.id === currentRequestId);
+    if (request) {
+        request.donorId = donorId;
+        request.status = 'matched';
+        request.matchedAt = new Date().toISOString().split('T')[0];
+        
+        showAlert('Donor assigned successfully!', 'success');
+        closeMatchModal();
+        loadRequests();
+        loadDashboardData();
+    }
+}
+
+function fulfillRequest(requestId) {
+    if (confirm('Mark this request as fulfilled?')) {
+        const request = bloodRequests.find(r => r.id === requestId);
+        if (request) {
+            request.status = 'fulfilled';
+            request.fulfilledAt = new Date().toISOString().split('T')[0];
+            
+            // Update donor's last donation date
+            if (request.donorId) {
+                const donor = donors.find(d => d.id === request.donorId);
+                if (donor) {
+                    donor.lastDonation = new Date().toISOString().split('T')[0];
+                    donor.eligible = false; // Will be eligible again after 56 days
+                }
+            }
+            
+            showAlert('Request fulfilled successfully!', 'success');
+            loadRequests();
+            loadDonors();
+            loadDashboardData();
+        }
+    }
+}
+
+function closeMatchModal() {
+    document.getElementById('match-modal').style.display = 'none';
+    currentRequestId = null;
+}
+
+// Profile functions
+function loadProfile() {
+    const profileContent = document.getElementById('profile-content');
+    
+    profileContent.innerHTML = `
+        <div class="form-row">
+            <div class="form-group">
+                <label>Username:</label>
+                <input type="text" value="${currentUser.username}" readonly>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="email" value="${currentUser.email}" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Role:</label>
+            <input type="text" value="${currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1)}" readonly>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-secondary" onclick="changePassword()">🔒 Change Password</button>
+        </div>
+    `;
+}
+
+function changePassword() {
+    const newPassword = prompt('Enter new password:');
+    if (newPassword && newPassword.length >= 6) {
+        const user = users.find(u => u.username === currentUser.username);
+        if (user) {
+            user.password = newPassword;
+            currentUser.password = newPassword;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showAlert('Password changed successfully!', 'success');
+        }
+    } else if (newPassword) {
+        showAlert('Password must be at least 6 characters long', 'error');
+    }
+}
+
+// Filter functions
+function filterDonors() {
+    const searchTerm = document.getElementById('donor-search').value.toLowerCase();
+    const bloodGroupFilter = document.getElementById('blood-group-filter').value;
+    
+    const tbody = document.getElementById('donors-table-body');
+    tbody.innerHTML = '';
+    
+    const filteredDonors = donors.filter(donor => {
+        const matchesSearch = donor.name.toLowerCase().includes(searchTerm) ||
+                             donor.phone.includes(searchTerm) ||
+                             donor.city.toLowerCase().includes(searchTerm);
+        const matchesBloodGroup = !bloodGroupFilter || donor.bloodGroup === bloodGroupFilter;
+        
+        return matchesSearch && matchesBloodGroup;
+    });
+    
+    filteredDonors.forEach(donor => {
+        const row = createDonorRow(donor);
+        tbody.appendChild(row);
+    });
+    
+    if (filteredDonors.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="loading">No donors found matching the criteria.</td></tr>';
+    }
+}
+
+function filterRecipients() {
+    const searchTerm = document.getElementById('recipient-search').value.toLowerCase();
+    const urgencyFilter = document.getElementById('urgency-filter').value;
+    
+    const tbody = document.getElementById('recipients-table-body');
+    tbody.innerHTML = '';
+    
+    const filteredRecipients = recipients.filter(recipient => {
+        const matchesSearch = recipient.name.toLowerCase().includes(searchTerm) ||
+                             recipient.phone.includes(searchTerm) ||
+                             recipient.hospital.toLowerCase().includes(searchTerm) ||
+                             recipient.city.toLowerCase().includes(searchTerm);
+        const matchesUrgency = !urgencyFilter || recipient.urgency === urgencyFilter;
+        
+        return matchesSearch && matchesUrgency;
+    });
+    
+    filteredRecipients.forEach(recipient => {
+        const row = createRecipientRow(recipient);
+        tbody.appendChild(row);
+    });
+    
+    if (filteredRecipients.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="loading">No recipients found matching the criteria.</td></tr>';
+    }
+}
+
+function filterRequests() {
+    const searchTerm = document.getElementById('request-search').value.toLowerCase();
+    const statusFilter = document.getElementById('status-filter').value;
+    
+    const tbody = document.getElementById('requests-table-body');
+    tbody.innerHTML = '';
+    
+    const filteredRequests = bloodRequests.filter(request => {
+        const recipient = recipients.find(r => r.id === request.recipientId);
+        const donor = request.donorId ? donors.find(d => d.id === request.donorId) : null;
+        
+        if (!recipient) return false;
+        
+        const matchesSearch = recipient.name.toLowerCase().includes(searchTerm) ||
+                             recipient.hospital.toLowerCase().includes(searchTerm) ||
+                             recipient.bloodGroup.toLowerCase().includes(searchTerm) ||
+                             (donor && donor.name.toLowerCase().includes(searchTerm));
+        const matchesStatus = !statusFilter || request.status === statusFilter;
+        
+        return matchesSearch && matchesStatus;
+    });
+    
+    filteredRequests.forEach(request => {
+        const row = createRequestRow(request);
+        tbody.appendChild(row);
+    });
+    
+    if (filteredRequests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="loading">No requests found matching the criteria.</td></tr>';
+    }
+}
+
+// Export functions
+function exportData() {
+    const data = {
+        donors: donors,
+        recipients: recipients,
+        bloodRequests: bloodRequests,
+        exportDate: new Date().toISOString()
+    };
+    
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `blood_donation_data_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showAlert('Data exported successfully!', 'success');
+}
+
+// Utility functions
+function generateToken() {
+    return Math.random().toString(36).substr(2) + Date.now().toString(36);
+}
+
+function showMessage(element, message, type) {
+    element.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+    setTimeout(() => {
+        element.innerHTML = '';
+    }, 5000);
+}
+
+function showAlert(message, type) {
+    // Create alert element
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+    alert.style.position = 'fixed';
+    alert.style.top = '20px';
+    alert.style.right = '20px';
+    alert.style.zIndex = '9999';
+    alert.style.minWidth = '300px';
+    alert.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+    
+    document.body.appendChild(alert);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        if (document.body.contains(alert)) {
+            document.body.removeChild(alert);
+        }
+    }, 4000);
+}
+
+function formatDate(dateString) {
+    if (!dateString) return 'Never';
+    const date = new Date(dateString);
+    return date.toLocaleDateString();
+}
+
+function calculateDaysSinceLastDonation(lastDonation) {
+    if (!lastDonation) return Infinity;
+    const lastDonationDate = new Date(lastDonation);
+    const today = new Date();
+    return Math.floor((today - lastDonationDate) / (1000 * 60 * 60 * 24));
+}
+
+// Auto-update donor eligibility
+function updateDonorEligibility() {
+    let updated = false;
+    
+    donors.forEach(donor => {
+        const wasEligible = donor.eligible;
+        donor.eligible = checkDonorEligibility(donor.lastDonation);
+        
+        if (wasEligible !== donor.eligible) {
+            updated = true;
+        }
+    });
+    
+    if (updated && currentSection === 'donors') {
+        loadDonors();
+        loadDashboardData();
+    }
+}
+
+// Notification system for urgent requests
+function checkUrgentRequests() {
+    const urgentRequests = bloodRequests.filter(request => {
+        const recipient = recipients.find(r => r.id === request.recipientId);
+        return recipient && recipient.urgency === 'high' && request.status === 'pending';
+    });
+    
+    if (urgentRequests.length > 0) {
+        const message = `⚠️ ${urgentRequests.length} urgent blood request(s) pending!`;
+        
+        // Only show if not already shown recently
+        const lastAlert = localStorage.getItem('lastUrgentAlert');
+        const now = Date.now();
+        
+        if (!lastAlert || (now - parseInt(lastAlert)) > 300000) { // 5 minutes
+            showAlert(message, 'warning');
+            localStorage.setItem('lastUrgentAlert', now.toString());
+        }
+    }
+}
+
+// Blood compatibility checker
+function getBloodCompatibility() {
+    return {
+        donors: {
+            'A+': ['A+', 'AB+'],
+            'A-': ['A+', 'A-', 'AB+', 'AB-'],
+            'B+': ['B+', 'AB+'],
+            'B-': ['B+', 'B-', 'AB+', 'AB-'],
+            'AB+': ['AB+'],
+            'AB-': ['AB+', 'AB-'],
+            'O+': ['A+', 'B+', 'AB+', 'O+'],
+            'O-': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']
+        },
+        recipients: {
+            'A+': ['A+', 'A-', 'O+', 'O-'],
+            'A-': ['A-', 'O-'],
+            'B+': ['B+', 'B-', 'O+', 'O-'],
+            'B-': ['B-', 'O-'],
+            'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+            'AB-': ['A-', 'B-', 'AB-', 'O-'],
+            'O+': ['O+', 'O-'],
+            'O-': ['O-']
+        }
+    };
+}
+
+// Statistics and analytics
+function generateStatistics() {
+    const stats = {
+        totalDonors: donors.length,
+        eligibleDonors: donors.filter(d => d.eligible).length,
+        totalRecipients: recipients.length,
+        pendingRequests: bloodRequests.filter(r => r.status === 'pending').length,
+        fulfilledRequests: bloodRequests.filter(r => r.status === 'fulfilled').length,
+        
+        bloodGroupDistribution: {
+            donors: {},
+            recipients: {}
+        },
+        
+        urgencyDistribution: {
+            high: recipients.filter(r => r.urgency === 'high').length,
+            medium: recipients.filter(r => r.urgency === 'medium').length,
+            low: recipients.filter(r => r.urgency === 'low').length
+        },
+        
+        cityWiseDistribution: {
+            donors: {},
+            recipients: {}
+        }
+    };
+    
+    // Blood group distribution
+    ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].forEach(bg => {
+        stats.bloodGroupDistribution.donors[bg] = donors.filter(d => d.bloodGroup === bg).length;
+        stats.bloodGroupDistribution.recipients[bg] = recipients.filter(r => r.bloodGroup === bg).length;
+    });
+    
+    // City-wise distribution
+    donors.forEach(donor => {
+        stats.cityWiseDistribution.donors[donor.city] = 
+            (stats.cityWiseDistribution.donors[donor.city] || 0) + 1;
+    });
+    
+    recipients.forEach(recipient => {
+        stats.cityWiseDistribution.recipients[recipient.city] = 
+            (stats.cityWiseDistribution.recipients[recipient.city] || 0) + 1;
+    });
+    
+    return stats;
+}
+
+// Emergency alert system
+function sendEmergencyAlert(recipientId) {
+    const recipient = recipients.find(r => r.id === recipientId);
+    if (!recipient || recipient.urgency !== 'high') return;
+    
+    const compatibleDonors = findCompatibleDonors(recipient.bloodGroup)
+        .filter(d => d.eligible);
+    
+    if (compatibleDonors.length === 0) {
+        showAlert('⚠️ CRITICAL: No eligible donors found for emergency request!', 'error');
+        return;
+    }
+    
+    // In a real application, this would send SMS/email alerts
+    showAlert(`🚨 Emergency alert sent to ${compatibleDonors.length} compatible donor(s)`, 'warning');
+    
+    // Log the emergency alert
+    console.log(`Emergency alert for ${recipient.name} (${recipient.bloodGroup}) sent to:`, 
+                compatibleDonors.map(d => d.name));
+}
+
+// Periodic data updates
+function startPeriodicUpdates() {
+    // Update donor eligibility every hour
+    setInterval(updateDonorEligibility, 3600000);
+    
+    // Check for urgent requests every 5 minutes
+    setInterval(checkUrgentRequests, 300000);
+    
+    // Auto-save data to localStorage every 10 minutes
+    setInterval(() => {
+        localStorage.setItem('donors', JSON.stringify(donors));
+        localStorage.setItem('recipients', JSON.stringify(recipients));
+        localStorage.setItem('bloodRequests', JSON.stringify(bloodRequests));
+    }, 600000);
+}
+
+// Data validation functions
+function validateDonorData(data) {
+    const errors = [];
+    
+    if (!data.name || data.name.trim().length < 2) {
+        errors.push('Name must be at least 2 characters long');
+    }
+    
+    if (!data.phone || !/^\+?[\d\s-()]{10,}$/.test(data.phone)) {
+        errors.push('Please enter a valid phone number');
+    }
+    
+    if (!data.bloodGroup || !['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].includes(data.bloodGroup)) {
+        errors.push('Please select a valid blood group');
+    }
+    
+    if (!data.age || data.age < 18 || data.age > 65) {
+        errors.push('Age must be between 18 and 65 years');
+    }
+    
+    if (data.lastDonation && new Date(data.lastDonation) > new Date()) {
+        errors.push('Last donation date cannot be in the future');
+    }
+    
+    return errors;
+}
+
+function validateRecipientData(data) {
+    const errors = [];
+    
+    if (!data.name || data.name.trim().length < 2) {
+        errors.push('Name must be at least 2 characters long');
+    }
+    
+    if (!data.phone || !/^\+?[\d\s-()]{10,}$/.test(data.phone)) {
+        errors.push('Please enter a valid phone number');
+    }
+    
+    if (!data.bloodGroup || !['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].includes(data.bloodGroup)) {
+        errors.push('Please select a valid blood group');
+    }
+    
+    if (!data.requiredUnits || data.requiredUnits < 1 || data.requiredUnits > 10) {
+        errors.push('Required units must be between 1 and 10');
+    }
+    
+    if (!data.urgency || !['high', 'medium', 'low'].includes(data.urgency)) {
+        errors.push('Please select a valid urgency level');
+    }
+    
+    if (!data.hospital || data.hospital.trim().length < 3) {
+        errors.push('Hospital name must be at least 3 characters long');
+    }
+    
+    return errors;
+}
+
+// Initialize periodic updates when app starts
+setTimeout(startPeriodicUpdates, 1000);
+
+// Load saved data from localStorage if available
+function loadSavedData() {
+    try {
+        const savedDonors = localStorage.getItem('donors');
+        const savedRecipients = localStorage.getItem('recipients');
+        const savedRequests = localStorage.getItem('bloodRequests');
+        
+        if (savedDonors) donors = JSON.parse(savedDonors);
+        if (savedRecipients) recipients = JSON.parse(savedRecipients);
+        if (savedRequests) bloodRequests = JSON.parse(savedRequests);
+    } catch (error) {
+        console.warn('Error loading saved data:', error);
+    }
+}
+
+// Load saved data on app initialization
+loadSavedData();
+</script>
